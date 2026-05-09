@@ -9,6 +9,10 @@ license = "MIT OR Apache-2.0"
 resolver = "2"
 
 [dependencies]
-bevy = { version = "0.18", features = ["bevy_camera_controller", "free_camera"] }
+bevy = { version = "0.18", features = [
+    "bevy_camera_controller",
+    "free_camera",
+    "bevy_core_pipeline"
+]}
 nalgebra = "0.33"
 parry3d = "0.21"
