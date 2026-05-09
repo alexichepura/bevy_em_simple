@@ -1,7 +1,7 @@
 use bevy::{
     diagnostic::{DiagnosticsStore, FrameTimeDiagnosticsPlugin},
     prelude::*,
-    text::{TextFont, TextColor},
+    text::{TextColor, TextFont},
     ui::{AlignSelf, Node, PositionType},
 };
 

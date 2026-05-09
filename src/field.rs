@@ -1,11 +1,11 @@
 use std::ops::{Add, Mul, Sub};
 
+use bevy::pbr::MeshMaterial3d;
 use bevy::{
     math::{Quat, Vec3},
     pbr::StandardMaterial,
     prelude::*,
 };
-use bevy::pbr::MeshMaterial3d;
 use parry3d::shape::{Cone, Cylinder};
 
 use crate::mesh::bevy_mesh;

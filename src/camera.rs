@@ -31,8 +31,7 @@ fn update_camera(
     mut free_camera_query: Query<(&mut FreeCamera, &mut FreeCameraState)>,
     input: Res<ButtonInput<KeyCode>>,
 ) {
-    let (mut free_camera, mut free_camera_state) =
-        free_camera_query.single_mut().unwrap();
+    let (mut free_camera, mut free_camera_state) = free_camera_query.single_mut().unwrap();
 
     if input.pressed(KeyCode::KeyZ) {
         free_camera.sensitivity = (free_camera.sensitivity - 0.005).max(0.005);
