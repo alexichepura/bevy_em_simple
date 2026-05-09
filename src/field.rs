@@ -2,13 +2,10 @@ use std::ops::{Add, Mul, Sub};
 
 use bevy::{
     math::{Quat, Vec3},
-    pbr::{PbrBundle, StandardMaterial},
-    prelude::{
-        AssetServer, Assets, BuildChildren, Color, Commands, Component, Mesh, Res, ResMut,
-        Transform,
-    },
+    pbr::StandardMaterial,
+    prelude::*,
 };
-// use nalgebra::Point3;
+use bevy::pbr::MeshMaterial3d;
 use parry3d::shape::{Cone, Cylinder};
 
 use crate::mesh::bevy_mesh;
@@ -35,15 +32,14 @@ pub fn field_system(
         let current_vec_length = current_vec.length();
         let wire_cylinder = Cylinder::new(current_vec_length / 2., 0.001);
         let wire_mesh = bevy_mesh(wire_cylinder.to_trimesh(10));
-        commands.spawn_bundle(PbrBundle {
-            transform: Transform {
+        commands.spawn((
+            Mesh3d(meshes.add(wire_mesh)),
+            MeshMaterial3d(materials.add(Color::srgb(0.5, 0.1, 0.5))),
+            Transform {
                 translation: *wire_coord,
                 ..Default::default()
             },
-            mesh: meshes.add(wire_mesh),
-            material: materials.add(Color::rgb(0.5, 0.1, 0.5).into()),
-            ..Default::default()
-        });
+        ));
     }
 
     let shift = 0.01;
@@ -52,7 +48,7 @@ pub fn field_system(
     for x in -n..n {
         for y in 0..10 {
             for z in -n..n {
-                let color = Color::rgb(0.1, 0.5, 0.1);
+                let color = Color::srgb(0.1, 0.5, 0.1);
                 let (a_x, a_y, a_z) = (shift * x as f32, shift * y as f32, shift * z as f32);
                 let arrow_coord = Vec3::new(a_x, a_y, a_z);
                 let mut arrow_cross = Vec3::new(0., 0., 0.);
@@ -79,28 +75,26 @@ pub fn field_system(
                 let cylinder_mesh = bevy_mesh(cylinder.to_trimesh(10));
 
                 let _arrow = commands
-                    .spawn_bundle(PbrBundle {
-                        transform: Transform {
+                    .spawn((
+                        Mesh3d(meshes.add(cylinder_mesh)),
+                        MeshMaterial3d(materials.add(color)),
+                        Transform {
                             translation: arrow_coord,
                             rotation: arrow_quat,
                             ..Default::default()
                         },
-                        mesh: meshes.add(cylinder_mesh),
-                        material: materials.add(color.into()),
-                        ..Default::default()
-                    })
+                    ))
                     .with_children(|parent| {
                         let cone = Cone::new(arrow_scale * 5., arrow_scale * 3.0);
                         let cone_mesh = bevy_mesh(cone.to_trimesh(10));
-                        parent.spawn_bundle(PbrBundle {
-                            transform: Transform {
+                        parent.spawn((
+                            Mesh3d(meshes.add(cone_mesh)),
+                            MeshMaterial3d(materials.add(color)),
+                            Transform {
                                 translation: Vec3::new(0.0, arrow_scale * 10., 0.0),
                                 ..Default::default()
                             },
-                            mesh: meshes.add(cone_mesh),
-                            material: materials.add(color.into()),
-                            ..Default::default()
-                        });
+                        ));
                     })
                     .insert(Arrow);
             }

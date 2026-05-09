@@ -1,9 +1,7 @@
 use bevy::{
+    mesh::{Indices, VertexAttributeValues},
     prelude::Mesh,
-    render::{
-        mesh::{Indices, VertexAttributeValues},
-        render_resource::PrimitiveTopology,
-    },
+    render::render_resource::PrimitiveTopology,
 };
 use nalgebra::{Point3, Vector3};
 use parry3d::math::Real;
@@ -39,14 +37,13 @@ pub fn bevy_mesh(buffers: (Vec<Point3<Real>>, Vec<[u32; 3]>)) -> Mesh {
     let indices: Vec<_> = (0..vertices.len() as u32).collect();
     let uvs: Vec<_> = (0..vertices.len()).map(|_| [0.0, 0.0]).collect();
 
-    // Generate the mesh
-    let mut mesh = Mesh::new(PrimitiveTopology::TriangleList);
-    mesh.set_attribute(
+    let mut mesh = Mesh::new(PrimitiveTopology::TriangleList, Default::default());
+    mesh.insert_attribute(
         Mesh::ATTRIBUTE_POSITION,
         VertexAttributeValues::from(vertices),
     );
-    mesh.set_attribute(Mesh::ATTRIBUTE_NORMAL, VertexAttributeValues::from(normals));
-    mesh.set_attribute(Mesh::ATTRIBUTE_UV_0, VertexAttributeValues::from(uvs));
-    mesh.set_indices(Some(Indices::U32(indices)));
+    mesh.insert_attribute(Mesh::ATTRIBUTE_NORMAL, VertexAttributeValues::from(normals));
+    mesh.insert_attribute(Mesh::ATTRIBUTE_UV_0, VertexAttributeValues::from(uvs));
+    mesh.insert_indices(Indices::U32(indices));
     mesh
 }
